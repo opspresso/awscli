@@ -12,7 +12,7 @@ unzip awscli-bundle.zip
 popd
 
 NOW=$(cat ./VERSION)
-NEW=$(ls target/awscli-bundle/packages/ | grep awscli | sed 's/awscli-//' | sed 's/.tar.gz//')
+NEW=$(ls target/awscli-bundle/packages/ | grep awscli | sed 's/awscli-//' | sed 's/.tar.gz//' | xargs)
 
 echo "USERNAME: ${USERNAME}"
 echo "REPONAME: ${REPONAME}"
