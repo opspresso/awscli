@@ -1,12 +1,12 @@
 # Dockerfile
 
-FROM python:slim
+FROM alpine
 
-RUN apt-get update && \
-    apt-get install -y curl zip
+RUN apk -v --update add python py-pip groff less mailcap bash
 
-RUN curl -sLO https://s3.amazonaws.com/aws-cli/awscli-bundle.zip && \
-    unzip awscli-bundle.zip && rm -rf awscli-bundle.zip && \
-    ./awscli-bundle/install -i /usr/local/aws -b /usr/local/bin/aws
+ENV VERSION 1
+RUN pip install --upgrade awscli==${VERSION} && \
+    apk -v --purge del py-pip && \
+    rm /var/cache/apk/*
 
 ENTRYPOINT ["bash"]
