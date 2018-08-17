@@ -1,5 +1,5 @@
 # awscli
 
 ```bash
-docker pull opspresso/awscli
+docker pull quay.io/opspresso/awscli
 ```
