@@ -3,7 +3,7 @@
 FROM python:slim
 
 RUN apt-get update && \
-    apt-get install -y git curl zip jq
+    apt-get install -y curl zip jq
 
 RUN curl -sLO https://s3.amazonaws.com/aws-cli/awscli-bundle.zip && \
     unzip awscli-bundle.zip && rm -rf awscli-bundle.zip && \
