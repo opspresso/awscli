@@ -14,10 +14,7 @@ popd
 NOW=$(cat ./VERSION)
 NEW=$(ls target/awscli-bundle/packages/ | grep awscli | sed 's/awscli-//' | sed 's/.tar.gz//' | xargs)
 
-echo "USERNAME: ${USERNAME}"
-echo "REPONAME: ${REPONAME}"
-echo "NOW: ${NOW}"
-echo "NEW: ${NEW}"
+printf '# %-10s: %-10s %-10s\n' "${REPONAME}" "${NOW}" "${NEW}"
 
 if [ "${NOW}" != "${NEW}" ]; then
     printf "${NEW}" > VERSION
