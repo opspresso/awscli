@@ -20,15 +20,17 @@ if [ "${NOW}" != "${NEW}" ]; then
     printf "${NEW}" > VERSION
     sed -i -e "s/ENV VERSION .*/ENV VERSION ${NEW}/g" Dockerfile
 
-    git config --global user.name "bot"
-    git config --global user.email "ops@nalbam.com"
+    if [ ! -z ${DOCKER_TOKEN} ]; then
+        git config --global user.name "bot"
+        git config --global user.email "ops@nalbam.com"
 
-    git add --all
-    git commit -m "${NEW}"
-    git push -q https://${GITHUB_TOKEN}@github.com/${USERNAME}/${REPONAME}.git master
+        git add --all
+        git commit -m "${NEW}"
+        git push -q https://${GITHUB_TOKEN}@github.com/${USERNAME}/${REPONAME}.git master
 
-    echo "# git push github.com/${USERNAME}/${REPONAME} ${NEW}"
+        echo "# git push github.com/${USERNAME}/${REPONAME} ${NEW}"
 
-    git tag ${NEW}
-    git push -q https://${GITHUB_TOKEN}@github.com/${USERNAME}/${REPONAME}.git ${NEW}
+        git tag ${NEW}
+        git push -q https://${GITHUB_TOKEN}@github.com/${USERNAME}/${REPONAME}.git ${NEW}
+    fi
 fi
