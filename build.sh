@@ -59,15 +59,15 @@ _prepare() {
 }
 
 _get_version() {
-    mkdir -p target
+    mkdir -p ${SHELL_DIR}/target
 
-    pushd target
+    pushd ${SHELL_DIR}/target
     curl -sLO https://s3.amazonaws.com/aws-cli/awscli-bundle.zip
     unzip awscli-bundle.zip
     popd
 
     NOW=$(cat ./VERSION | xargs)
-    NEW=$(ls target/awscli-bundle/packages/ | grep awscli | sed 's/awscli-//' | sed 's/.tar.gz//' | xargs)
+    NEW=$(ls ${SHELL_DIR}/target/awscli-bundle/packages/ | grep awscli | sed 's/awscli-//' | sed 's/.tar.gz//' | xargs)
 
     printf '# %-10s %-10s %-10s\n' "${REPONAME}" "${NOW}" "${NEW}"
 }
