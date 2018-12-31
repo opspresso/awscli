@@ -2,8 +2,6 @@
 
 SHELL_DIR=$(dirname $0)
 
-CMD=${1:-${CIRCLE_JOB}}
-
 USERNAME=${CIRCLE_PROJECT_USERNAME}
 REPONAME=${CIRCLE_PROJECT_REPONAME}
 
@@ -59,8 +57,6 @@ _prepare() {
 }
 
 _get_version() {
-    mkdir -p ${SHELL_DIR}/target
-
     pushd ${SHELL_DIR}/target
     curl -sLO https://s3.amazonaws.com/aws-cli/awscli-bundle.zip
     unzip awscli-bundle.zip
@@ -101,7 +97,7 @@ _cf_reset() {
 }
 
 _replace() {
-    sed -i -e "s/ENV VERSION .*/ENV VERSION ${NEW}/g" Dockerfile
+    sed -i -e "s/ENV VERSION .*/ENV VERSION ${NEW}/g" ${SHELL_DIR}/Dockerfile
 }
 
 build() {
@@ -109,8 +105,8 @@ build() {
 
     _get_version
 
-    if [ "${NOW}" != "${NEW}" ]; then
-        printf "${NEW}" > VERSION
+    if [ "${NEW}" != "" ] && [ "${NEW}" != "${NOW}" ]; then
+        printf "${NEW}" > ${SHELL_DIR}/VERSION
         printf "${NEW}" > ${SHELL_DIR}/target/dist/${REPONAME}
 
         # replace
