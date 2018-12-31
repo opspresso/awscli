@@ -120,7 +120,7 @@ build() {
         _git_push
 
         # s3 sync
-        _s3_sync "${SHELL_DIR}/target/dist/" "${BUCKET}/tools"
+        _s3_sync "${SHELL_DIR}/target/dist/" "${BUCKET}/latest"
         _cf_reset "${BUCKET}"
     fi
 }
