@@ -66,7 +66,7 @@ _get_version() {
     unzip awscli-bundle.zip
     popd
 
-    NOW=$(cat ./VERSION | xargs)
+    NOW=$(cat ${SHELL_DIR}/VERSION | xargs)
     NEW=$(ls ${SHELL_DIR}/target/awscli-bundle/packages/ | grep awscli | sed 's/awscli-//' | sed 's/.tar.gz//' | xargs)
 
     printf '# %-10s %-10s %-10s\n' "${REPONAME}" "${NOW}" "${NEW}"
