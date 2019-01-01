@@ -109,13 +109,10 @@ build() {
         printf "${NEW}" > ${SHELL_DIR}/VERSION
         printf "${NEW}" > ${SHELL_DIR}/target/dist/${REPONAME}
 
-        # replace
         _replace
 
-        # git push
         _git_push
 
-        # s3 sync
         _s3_sync "${SHELL_DIR}/target/dist/" "${BUCKET}/latest"
         _cf_reset "${BUCKET}"
     fi
