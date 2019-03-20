@@ -5,6 +5,8 @@ SHELL_DIR=$(dirname $0)
 USERNAME=${CIRCLE_PROJECT_USERNAME}
 REPONAME=${CIRCLE_PROJECT_REPONAME}
 
+REPOPATH="aws/aws-cli"
+
 BUCKET="repo.opspresso.com"
 
 GIT_USERNAME="bot"
@@ -56,18 +58,6 @@ _prepare() {
     find ./** | grep [.]sh | xargs chmod 755
 }
 
-_get_version() {
-    pushd ${SHELL_DIR}/target
-    curl -sLO https://s3.amazonaws.com/aws-cli/awscli-bundle.zip
-    unzip awscli-bundle.zip
-    popd
-
-    NOW=$(cat ${SHELL_DIR}/VERSION | xargs)
-    NEW=$(ls ${SHELL_DIR}/target/awscli-bundle/packages/ | grep awscli | sed 's/awscli-//' | sed 's/.tar.gz//' | xargs)
-
-    printf '# %-10s %-10s %-10s\n' "${REPONAME}" "${NOW}" "${NEW}"
-}
-
 _git_push() {
     if [ ! -z ${GITHUB_TOKEN} ]; then
         git config --global user.name "${GIT_USERNAME}"
@@ -96,8 +86,31 @@ _cf_reset() {
     fi
 }
 
+_slack() {
+    if [ ! -z ${SLACK_TOKEN} ]; then
+        TITLE="${REPONAME} updated"
+
+        FOOTER="<https://github.com/${REPOPATH}/releases/tag/${NEW}|${REPOPATH}>"
+
+        curl -sL opspresso.com/tools/slack | bash -s -- \
+            --token="${SLACK_TOKEN}" --username="${USERNAME}" \
+            --footer="${FOOTER}" --footer_icon="https://assets-cdn.github.com/favicon.ico" \
+            --color="good" --title="${TITLE}" "\`${NEW}\`"
+    fi
+}
+
 _replace() {
+    printf "${NEW}" > ${SHELL_DIR}/VERSION
+    printf "${NEW}" > ${SHELL_DIR}/target/dist/${REPONAME}
+
     sed -i -e "s/ENV VERSION .*/ENV VERSION ${NEW}/g" ${SHELL_DIR}/Dockerfile
+}
+
+_get_version() {
+    NOW=$(cat ${SHELL_DIR}/VERSION | xargs)
+    NEW=$(curl -s https://api.github.com/repos/${REPOPATH}/releases/latest | grep tag_name | cut -d'"' -f4 | xargs)
+
+    printf '# %-10s %-10s %-10s\n' "${REPONAME}" "${NOW}" "${NEW}"
 }
 
 build() {
@@ -106,15 +119,14 @@ build() {
     _get_version
 
     if [ "${NEW}" != "" ] && [ "${NEW}" != "${NOW}" ]; then
-        printf "${NEW}" > ${SHELL_DIR}/VERSION
-        printf "${NEW}" > ${SHELL_DIR}/target/dist/${REPONAME}
-
         _replace
 
         _git_push
 
         _s3_sync "${SHELL_DIR}/target/dist/" "${BUCKET}/latest"
         _cf_reset "${BUCKET}"
+
+        _slack
     fi
 }
 
