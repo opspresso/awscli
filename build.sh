@@ -137,7 +137,7 @@ _release() {
     if [ -z ${GITHUB_TOKEN} ]; then
         return
     fi
-    if [ ! -f ${SHELL_DIR}/target/VERSION ]; then
+    if [ ! -f ${SHELL_DIR}/target/dist/${REPONAME} ]; then
         return
     fi
 
