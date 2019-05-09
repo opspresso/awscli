@@ -2,11 +2,11 @@
 
 FROM alpine
 
-RUN apk -v --update add bash curl python py-pip groff less mailcap ca-certificates
+RUN apk -v --update add bash curl python3 python3-dev groff less mailcap ca-certificates
 
-ENV VERSION 1.16.144
-RUN pip install --upgrade awscli==${VERSION} && \
-    apk -v --purge del py-pip && \
+ENV VERSION 0
+
+RUN pip3 install --upgrade awscli==${VERSION} && \
     rm /var/cache/apk/*
 
 ENTRYPOINT ["bash"]
