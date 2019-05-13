@@ -4,7 +4,7 @@ OS_NAME="$(uname | awk '{print tolower($0)}')"
 
 SHELL_DIR=$(dirname $0)
 
-CMD=${1:-${CIRCLE_JOB}}
+CMD=${1:-$CIRCLE_JOB}
 
 USERNAME=${CIRCLE_PROJECT_USERNAME}
 REPONAME=${CIRCLE_PROJECT_REPONAME}
@@ -76,14 +76,14 @@ _package() {
     NOW=$(cat ${SHELL_DIR}/Dockerfile | grep 'ENV VERSION' | awk '{print $3}' | xargs)
     # NEW=$(curl -s https://api.github.com/repos/${REPOPATH}/releases/latest | grep tag_name | cut -d'"' -f4 | xargs)
 
-    pushd ${RUN_PATH}/target
+    pushd ${SHELL_DIR}/target
     curl -sLO https://s3.amazonaws.com/aws-cli/awscli-bundle.zip
     unzip awscli-bundle.zip
     popd
 
-    NEW=$(ls ${RUN_PATH}/target/awscli-bundle/packages/ | grep awscli | sed 's/awscli-//' | sed 's/.tar.gz//' | xargs)
+    NEW=$(ls ${SHELL_DIR}/target/awscli-bundle/packages/ | grep awscli | sed 's/awscli-//' | sed 's/.tar.gz//' | xargs)
 
-    rm -rf ${RUN_PATH}/target/awscli-*
+    rm -rf ${SHELL_DIR}/target/awscli-*
 
     printf '# %-10s %-10s %-10s\n' "${REPONAME}" "${NOW}" "${NEW}"
 
