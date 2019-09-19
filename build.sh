@@ -101,7 +101,7 @@ _s3_sync() {
     BIGGER=$(echo -e "${NOW}\n${NEW}" | sort -V -r | head -1)
 
     if [ "${BIGGER}" == "${NOW}" ]; then
-        _result "${NOW} >= ${NEW}"
+        _result "_s3_sync ${NOW} >= ${NEW}"
         return
     fi
 
@@ -128,8 +128,9 @@ _git_push() {
         _result "not found GITHUB_TOKEN"
         return
     fi
+
     if [ "${NEW}" == "" ] || [ "${NEW}" == "${NOW}" ]; then
-        _result "${NOW} == ${NEW}"
+        _result "_git_push ${NOW} == ${NEW}"
         return
     fi
 
