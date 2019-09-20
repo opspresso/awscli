@@ -21,7 +21,6 @@ jobs:
           args: --release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          ASSET_PATH: ./target/release
 
       - name: Docker Push
         uses: opspresso/action-docker@master
