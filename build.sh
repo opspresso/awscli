@@ -104,50 +104,25 @@ _s3_sync() {
         return
     fi
 
-    _result "_s3_sync ${REPONAME} ${NEW}"
+    _result "_s3_sync ${NEW}"
 
     printf "${NEW}" > ${SHELL_DIR}/LATEST
     printf "${NEW}" > ${SHELL_DIR}/target/publish/${REPONAME}
-
-    # BUCKET="$(echo "${PUBLISH_PATH}" | cut -d'/' -f1)"
-
-    # # aws s3 sync
-    # _command "aws s3 sync ${SHELL_DIR}/target/publish/ s3://${PUBLISH_PATH}/ --acl public-read"
-    # aws s3 sync ${SHELL_DIR}/target/publish/ s3://${PUBLISH_PATH}/ --acl public-read
-
-    # # aws cf reset
-    # CFID=$(aws cloudfront list-distributions --query "DistributionList.Items[].{Id:Id,Origin:Origins.Items[0].DomainName}[?contains(Origin,'${BUCKET}')] | [0]" | grep 'Id' | cut -d'"' -f4)
-    # if [ "${CFID}" != "" ]; then
-    #     aws cloudfront create-invalidation --distribution-id ${CFID} --paths "/*"
-    # fi
 }
 
 _git_push() {
-    # if [ -z ${GITHUB_TOKEN} ]; then
-    #     _result "not found GITHUB_TOKEN"
-    #     return
-    # fi
-
     if [ "${NEW}" == "" ] || [ "${NEW}" == "${NOW}" ]; then
         _result "_git_push ${NOW} == ${NEW}"
         return
     fi
 
-    _result "_git_push ${REPONAME} ${NEW}"
+    _result "_git_push ${NEW}"
 
     printf "${NEW}" > ${SHELL_DIR}/VERSION
+    printf "${NEW}" > ${SHELL_DIR}/target/commit_message
 
     _replace "s/ENV VERSION .*/ENV VERSION ${NEW}/g" ${SHELL_DIR}/Dockerfile
     _replace "s/ENV VERSION .*/ENV VERSION ${NEW}/g" ${SHELL_DIR}/README.md
-
-    # git config --global user.name "${GIT_USERNAME}"
-    # git config --global user.email "${GIT_USEREMAIL}"
-
-    # git add --all
-    # git commit -m "${NEW}"
-
-    # _command "git push github.com/${USERNAME}/${REPONAME} ${NEW}"
-    # git push -q https://${GITHUB_TOKEN}@github.com/${USERNAME}/${REPONAME}.git master
 }
 
 ################################################################################
