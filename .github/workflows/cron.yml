@@ -36,3 +36,4 @@ jobs:
           args: --commit
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_BRANCH: master
