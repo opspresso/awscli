@@ -16,6 +16,14 @@ jobs:
         run: |
           bash ./build.sh
 
+      - name: Commit & Push
+        uses: opspresso/action-builder@master
+        with:
+          args: --commit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GIT_BRANCH: master
+
       - name: Publish
         uses: opspresso/action-builder@master
         with:
@@ -27,11 +35,3 @@ jobs:
           FROM_PATH: "./target/publish"
           DEST_PATH: "s3://repo.opspresso.com/latest"
           OPTIONS: "--acl public-read"
-
-      - name: Commit
-        uses: opspresso/action-builder@master
-        with:
-          args: --commit
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GIT_BRANCH: master
