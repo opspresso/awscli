@@ -69,11 +69,15 @@ _flat_version() {
 ################################################################################
 
 _prepare() {
+    # 755
+    find ./** | grep [.]sh | xargs chmod 755
+
     # target
     mkdir -p ${SHELL_DIR}/target/publish
 
-    # 755
-    find ./** | grep [.]sh | xargs chmod 755
+    # touch message
+    touch ${SHELL_DIR}/target/commit_message
+    touch ${SHELL_DIR}/target/slack_message.json
 }
 
 _package() {
@@ -124,7 +128,7 @@ _git_push() {
     _replace "s/ENV VERSION .*/ENV VERSION ${NEW}/g" ${SHELL_DIR}/Dockerfile
     _replace "s/ENV VERSION .*/ENV VERSION ${NEW}/g" ${SHELL_DIR}/README.md
 
-    cat <<EOF > ${RUN_PATH}/target/slack_message.json
+    cat <<EOF > ${SHELL_DIR}/target/slack_message.json
 {
     "username": "${USERNAME}",
     "attachments": [{
