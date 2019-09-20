@@ -15,8 +15,6 @@ jobs:
           fetch-depth: 1
 
       - name: Check Version
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           bash ./build.sh
 
@@ -31,3 +29,10 @@ jobs:
           FROM_PATH: "./target/publish"
           DEST_PATH: "s3://repo.opspresso.com/latest"
           OPTIONS: "--acl public-read"
+
+      - name: Commit
+        uses: opspresso/action-builder@master
+        with:
+          args: --commit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

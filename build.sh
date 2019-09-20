@@ -123,10 +123,10 @@ _s3_sync() {
 }
 
 _git_push() {
-    if [ -z ${GITHUB_TOKEN} ]; then
-        _result "not found GITHUB_TOKEN"
-        return
-    fi
+    # if [ -z ${GITHUB_TOKEN} ]; then
+    #     _result "not found GITHUB_TOKEN"
+    #     return
+    # fi
 
     if [ "${NEW}" == "" ] || [ "${NEW}" == "${NOW}" ]; then
         _result "_git_push ${NOW} == ${NEW}"
@@ -140,14 +140,14 @@ _git_push() {
     _replace "s/ENV VERSION .*/ENV VERSION ${NEW}/g" ${SHELL_DIR}/Dockerfile
     _replace "s/ENV VERSION .*/ENV VERSION ${NEW}/g" ${SHELL_DIR}/README.md
 
-    git config --global user.name "${GIT_USERNAME}"
-    git config --global user.email "${GIT_USEREMAIL}"
+    # git config --global user.name "${GIT_USERNAME}"
+    # git config --global user.email "${GIT_USEREMAIL}"
 
-    git add --all
-    git commit -m "${NEW}"
+    # git add --all
+    # git commit -m "${NEW}"
 
-    _command "git push github.com/${USERNAME}/${REPONAME} ${NEW}"
-    git push -q https://${GITHUB_TOKEN}@github.com/${USERNAME}/${REPONAME}.git master
+    # _command "git push github.com/${USERNAME}/${REPONAME} ${NEW}"
+    # git push -q https://${GITHUB_TOKEN}@github.com/${USERNAME}/${REPONAME}.git master
 }
 
 ################################################################################
