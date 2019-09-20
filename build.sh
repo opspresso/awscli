@@ -6,13 +6,12 @@ SHELL_DIR=$(dirname $0)
 
 CMD=${1:-$CIRCLE_JOB}
 
-USERNAME=${CIRCLE_PROJECT_USERNAME}
-REPONAME=${CIRCLE_PROJECT_REPONAME}
+REPOSITORY=${GITHUB_REPOSITORY}
+
+USERNAME=${GITHUB_ACTOR}
+REPONAME=$(echo "${REPOSITORY}" | cut -d'/' -f2)
 
 REPOPATH="aws/aws-cli"
-
-# ${BUCKET}/latest/${REPONAME}
-PUBLISH_PATH="repo.opspresso.com/latest"
 
 GIT_USERNAME="bot"
 GIT_USEREMAIL="bot@nalbam.com"
@@ -141,14 +140,14 @@ _git_push() {
     _replace "s/ENV VERSION .*/ENV VERSION ${NEW}/g" ${SHELL_DIR}/Dockerfile
     _replace "s/ENV VERSION .*/ENV VERSION ${NEW}/g" ${SHELL_DIR}/README.md
 
-    # git config --global user.name "${GIT_USERNAME}"
-    # git config --global user.email "${GIT_USEREMAIL}"
+    git config --global user.name "${GIT_USERNAME}"
+    git config --global user.email "${GIT_USEREMAIL}"
 
-    # git add --all
-    # git commit -m "${NEW}"
+    git add --all
+    git commit -m "${NEW}"
 
-    # _command "git push github.com/${USERNAME}/${REPONAME} ${NEW}"
-    # git push -q https://${GITHUB_TOKEN}@github.com/${USERNAME}/${REPONAME}.git master
+    _command "git push github.com/${USERNAME}/${REPONAME} ${NEW}"
+    git push -q https://${GITHUB_TOKEN}@github.com/${USERNAME}/${REPONAME}.git master
 }
 
 ################################################################################

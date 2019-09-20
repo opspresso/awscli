@@ -2,7 +2,7 @@
 
 FROM python:3-stretch
 
-ENV VERSION 1.16.242
+ENV VERSION 1.16.240
 
 RUN apt-get update && \
     apt-get install -y --no-install-recommends curl git groff jq && \

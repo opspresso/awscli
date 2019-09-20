@@ -15,6 +15,8 @@ jobs:
           fetch-depth: 1
 
       - name: Check Version
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           bash ./build.sh
 
