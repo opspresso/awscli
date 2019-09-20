@@ -22,7 +22,7 @@ jobs:
           args: --commit
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          GIT_BRANCH: "master"
+          MESSAGE_PATH: ./target/commit_message
 
       - name: Publish
         uses: opspresso/action-builder@master
@@ -35,3 +35,11 @@ jobs:
           FROM_PATH: "./target/publish"
           DEST_PATH: "s3://repo.opspresso.com/latest"
           OPTIONS: "--acl public-read"
+
+      - name: Post to Slack
+        uses: opspresso/action-builder@master
+        with:
+          args: --slack
+        env:
+          SLACK_TOKEN: ${{ secrets.SLACK_TOKEN }}
+          JSON_PATH: ./target/slack_message.json
