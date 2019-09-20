@@ -74,10 +74,6 @@ _prepare() {
 
     # target
     mkdir -p ${SHELL_DIR}/target/publish
-
-    # touch message
-    touch ${SHELL_DIR}/target/commit_message
-    touch ${SHELL_DIR}/target/slack_message.json
 }
 
 _package() {
