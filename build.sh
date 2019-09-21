@@ -78,7 +78,7 @@ _package() {
 
     NEW=$(ls ${SHELL_DIR}/target/awscli-bundle/packages/ | grep awscli | sed 's/awscli-//' | sed 's/.tar.gz//' | xargs)
 
-    rm -rf ${SHELL_DIR}/target/awscli-*
+    # rm -rf ${SHELL_DIR}/target/awscli-*
 
     printf '# %-10s %-10s %-10s\n' "${REPONAME}" "${NOW}" "${NEW}"
 
