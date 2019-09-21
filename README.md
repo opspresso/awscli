@@ -1,7 +1,7 @@
 # awscli
 
-[![GitHub release](https://img.shields.io/github/release/opspresso/awscli.svg)](https://github.com/opspresso/awscli/releases)
-[![CircleCI](https://circleci.com/gh/opspresso/awscli.svg?style=svg)](https://circleci.com/gh/opspresso/awscli)
+[![GitHub Actions status](https://github.com/opspresso/awscli/workflows/Build-Push/badge.svg)](https://github.com/opspresso/awscli/actions)
+[![GitHub Releases](https://img.shields.io/github/release/opspresso/awscli.svg)](https://github.com/opspresso/awscli/releases)
 
 [![DockerHub Badge](http://dockeri.co/image/opspresso/awscli)](https://hub.docker.com/r/opspresso/awscli/)
 
