@@ -27,5 +27,5 @@ jobs:
         env:
           USERNAME: ${{ secrets.DOCKER_USERNAME }}
           PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-          IMAGE_NAME: "${GITHUB_REPOSITORY}"
+          IMAGE_NAME: "${{ GITHUB_REPOSITORY }}"
           LATEST: "true"
