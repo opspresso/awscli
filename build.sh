@@ -4,17 +4,12 @@ OS_NAME="$(uname | awk '{print tolower($0)}')"
 
 SHELL_DIR=$(dirname $0)
 
-CMD=${1:-$CIRCLE_JOB}
-
 REPOSITORY=${GITHUB_REPOSITORY}
 
 USERNAME=${GITHUB_ACTOR}
 REPONAME=$(echo "${REPOSITORY}" | cut -d'/' -f2)
 
 REPOPATH="aws/aws-cli"
-
-GIT_USERNAME="bot"
-GIT_USEREMAIL="bot@nalbam.com"
 
 NOW=
 NEW=
@@ -62,18 +57,14 @@ _replace() {
     fi
 }
 
-_flat_version() {
-    echo "$@" | awk -F. '{ printf("%05s%05s%05s\n", $1,$2,$3); }'
-}
-
 ################################################################################
 
 _prepare() {
-    # 755
-    find ./** | grep [.]sh | xargs chmod 755
-
     # target
     mkdir -p ${SHELL_DIR}/target/publish
+
+    # 755
+    find ./** | grep [.]sh | xargs chmod 755
 }
 
 _package() {
