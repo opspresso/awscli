@@ -2,7 +2,7 @@
 
 FROM alpine
 
-RUN apk add -v --update bash curl python py-pip groff less mailcap jq perl
+RUN apk add -v --update bash curl python py-pip jq
 
 ENV VERSION 1.16.243
 
