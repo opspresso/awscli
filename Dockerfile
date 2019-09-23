@@ -1,12 +1,15 @@
 # Dockerfile
 
-FROM python:3-stretch
+FROM alpine
 
 ENV VERSION 1.16.243
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends curl git groff jq && \
-    apt-get -y clean && apt-get -y autoclean && apt-get -y autoremove && \
-    pip install --quiet --no-cache-dir awscli==${VERSION}
+RUN apk -v --update add bash curl python py-pip groff less mailcap
 
-CMD ["aws"]
+RUN pip install --upgrade awscli==${VERSION} python-magic && \
+    apk -v --purge del py-pip && \
+    rm /var/cache/apk/*
+
+VOLUME /root/.aws
+
+ENTRYPOINT ["aws"]
