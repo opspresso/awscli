@@ -26,3 +26,6 @@ build/
 .settings/
 .metadata/
 .project
+
+# co-worker
+CODEOWNERS
