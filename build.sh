@@ -67,49 +67,22 @@ _prepare() {
     find ./** | grep [.]sh | xargs chmod 755
 }
 
-_package() {
-    NOW=$(cat ${SHELL_DIR}/Dockerfile | grep 'ENV VERSION' | awk '{print $3}' | xargs)
-    # NEW=$(curl -s https://api.github.com/repos/${REPOPATH}/releases/latest | grep tag_name | cut -d'"' -f4 | xargs)
-
+_pickup() {
     pushd ${SHELL_DIR}/target
     curl -sLO https://s3.amazonaws.com/aws-cli/awscli-bundle.zip
     unzip awscli-bundle.zip
     popd
 
-    NEW=$(ls ${SHELL_DIR}/target/awscli-bundle/packages/ | grep awscli | sed 's/awscli-//' | sed 's/.tar.gz//' | xargs)
+    VERSION=$(ls ${SHELL_DIR}/target/awscli-bundle/packages/ | grep awscli | sed 's/awscli-//' | sed 's/.tar.gz//' | xargs)
 
-    # rm -rf ${SHELL_DIR}/target/awscli-*
-
-    printf '# %-10s %-10s %-10s\n' "${REPONAME}" "${NOW}" "${NEW}"
-
-    _updated
-    _latest
-}
-
-_latest() {
-    BIGGER=$(echo -e "${NOW}\n${NEW}" | sort -V -r | head -1)
-
-    if [ "${BIGGER}" == "${NOW}" ]; then
-        _success "_latest ${NOW} >= ${NEW}"
+    if [ -z "${VERSION}" ]; then
+        _error "Not found new version."
     fi
 
-    VERSION="${NEW}"
-
-    _result "_latest ${VERSION}"
-
-    printf "${VERSION}" > ${SHELL_DIR}/LATEST
-    printf "${VERSION}" > ${SHELL_DIR}/target/publish/${REPONAME}
+    _result "_pickup ${VERSION}"
 }
 
 _updated() {
-    if [ "${NEW}" == "" ] || [ "${NEW}" == "${NOW}" ]; then
-        _error "_updated ${NOW} == ${NEW}"
-    fi
-
-    VERSION="${NEW}"
-
-    _result "_updated ${VERSION}"
-
     printf "${VERSION}" > ${SHELL_DIR}/VERSION
     printf "${VERSION}" > ${SHELL_DIR}/target/commit_message
 
@@ -128,10 +101,40 @@ _updated() {
     }]
 }
 EOF
+
+    _result "_updated ${VERSION}"
+}
+
+_latest() {
+    COUNT=$(echo ${VERSION} | grep '-' | wc -l | xargs)
+
+    if [ "x${COUNT}" != "x0" ]; then
+        _success "_latest New version has '-'."
+    fi
+
+    LATEST=$(cat ${SHELL_DIR}/LATEST | xargs)
+
+    BIGGER=$(echo -e "${VERSION}\n${LATEST}" | sort -V -r | head -1)
+
+    if [ "${BIGGER}" == "${LATEST}" ]; then
+        _success "_latest ${VERSION} <= ${LATEST}"
+    fi
+
+    printf "${VERSION}" > ${SHELL_DIR}/LATEST
+    printf "${VERSION}" > ${SHELL_DIR}/target/publish/${REPONAME}
+
+    _replace "s/ENV LATEST .*/ENV LATEST ${VERSION}/g" ${SHELL_DIR}/README.md
+
+    _result "_latest ${VERSION}"
+}
+
+_build() {
+    _prepare
+    _pickup
+    _updated
+    _latest
 }
 
 ################################################################################
 
-_prepare
-
-_package
+_build
