@@ -11,8 +11,7 @@ REPONAME=$(echo "${REPOSITORY}" | cut -d'/' -f2)
 
 REPOPATH="aws/aws-cli"
 
-NOW=
-NEW=
+VERSION=
 
 ################################################################################
 
