@@ -18,5 +18,5 @@ ENV VERSION 1.16.286
 ## latest
 
 ```
-ENV LATEST 0
+ENV LATEST 1.16.286
 ```
