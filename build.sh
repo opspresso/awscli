@@ -78,6 +78,12 @@ _pickup() {
         _error "Not found new version."
     fi
 
+    LATEST=$(cat ${SHELL_DIR}/LATEST | xargs)
+
+    if [ "${VERSION}" == "${LATEST}" ]; then
+        _error "${VERSION} is latest version."
+    fi
+
     _result "_pickup ${VERSION}"
 }
 
