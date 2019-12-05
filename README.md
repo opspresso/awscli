@@ -12,11 +12,11 @@ docker pull opspresso/awscli
 ## version
 
 ```
-ENV VERSION 1.16.296
+ENV VERSION 1.16.297
 ```
 
 ## latest
 
 ```
-ENV LATEST 1.16.296
+ENV LATEST 1.16.297
 ```
