@@ -4,7 +4,7 @@ FROM alpine
 
 RUN apk add -v --update bash curl python py-pip jq git file
 
-ENV VERSION 1.18.45
+ENV VERSION 1.18.46
 
 RUN pip install --upgrade awscli==${VERSION} && \
     apk del -v --purge py-pip && \
