@@ -67,21 +67,36 @@ _prepare() {
 }
 
 _pickup() {
-    pushd ${SHELL_DIR}/target
-    curl -sLO https://s3.amazonaws.com/aws-cli/awscli-bundle.zip
-    unzip awscli-bundle.zip
-    popd
+    THISVERSIONS=/tmp/this-versions
+    curl -s https://api.github.com/repos/${REPOSITORY}/releases | grep tag_name | cut -d'"' -f4 > ${THISVERSIONS}
 
-    VERSION=$(ls ${SHELL_DIR}/target/awscli-bundle/packages/ | grep awscli | sed 's/awscli-//' | sed 's/.tar.gz//' | xargs)
+    _command "this-versions"
+    cat ${THISVERSIONS}
+
+    REPOVERSIONS=/tmp/repo-versions
+    curl -s https://api.github.com/repos/${REPOPATH}/releases | grep tag_name | cut -d'"' -f4 | head -5 > ${REPOVERSIONS}
+
+    _command "repo-versions"
+    cat ${REPOVERSIONS}
+
+    while read REPOVERSION; do
+        HAS="false"
+
+        while read THISVERSION; do
+            if [ "${REPOVERSION}" == "${THISVERSION}" ]; then
+                HAS="true"
+                break
+            fi
+        done < ${THISVERSIONS}
+
+        if [ "${HAS}" == "false" ]; then
+            VERSION="${REPOVERSION}"
+            break
+        fi
+    done < ${REPOVERSIONS}
 
     if [ -z "${VERSION}" ]; then
         _error "Not found new version."
-    fi
-
-    LATEST=$(cat ${SHELL_DIR}/LATEST | xargs)
-
-    if [ "${VERSION}" == "${LATEST}" ]; then
-        _error "${VERSION} is latest version."
     fi
 
     _result "_pickup ${VERSION}"
